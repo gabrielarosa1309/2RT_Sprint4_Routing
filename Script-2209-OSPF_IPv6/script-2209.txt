@@ -1,0 +1,94 @@
+SCRIPT 22/09 - IPv6 e OSPF
+
+!RT0
+
+en 
+conf t
+int g0/0
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:1::1/64 -até aqui liga o roteador e o gateway começa a pingar
+int s0/3/0
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:F::1/127
+int S0/3/1
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:A::1/127
+ipv6 unicast-routing
+ipv6 router ospf 10
+router-id 1.1.1.1
+passive-interface g0/0
+interface g0/0
+ipv6 ospf 10 area 0
+ipv6 enable
+interface s0/3/1
+ipv6 ospf 10 area 0
+ipv6 enable
+interface s0/3/0
+ipv6 ospf 10 area 0
+ipv6 enable
+do wr
+
+
+!RT1
+
+en 
+conf t
+int g0/0
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:2::1/64
+int s0/3/0
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:F::0/127
+int S0/3/1
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:B::1/127
+ipv6 unicast-routing
+ipv6 router ospf 10
+router-id 2.2.2.2
+passive-interface g0/0
+interface g0/0
+ipv6 enable
+ipv6 ospf 10 area 0
+int s0/3/0
+ipv6 enable
+ipv6 ospf 10 area 0
+int s0/3/1
+ipv6 enable
+ipv6 ospf 10 area 0
+
+
+!RT2
+
+en
+conf t
+int S0/3/1
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:A::0/127
+int S0/3/0
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:B::0/127
+int g0/0
+no shutdown
+ipv6 enable
+ipv6 address 2001:DB8:CAFE:3::1/127
+ipv6 unicast-routing
+ipv6 router ospf 10
+router-id 3.3.3.3
+passive-interface g0/0
+interface g0/0
+ipv6 enable
+ipv6 ospf 10 area 0
+int s0/3/0
+ipv6 enable
+ipv6 ospf 10 area 0
+int s0/3/1
+ipv6 enable
+ipv6 ospf 10 area 0

@@ -1,0 +1,24 @@
+SCRIPT 18/09 - IPv6
+
+!RT
+
+en
+conf t
+hostname RT-IPV6-BETA
+interface g0/0
+no shutdown
+ipv6 address 2001:DB8:CAFE:1::1/64
+interface Serial0/3/0
+ipv6 address 2001:DB8:CAFE:F::0/127
+exit
+ipv6 unicast-routing
+ipv6 route 2001:DB8:CAFE:1::/64 2001:DB8:CAFE:F::1
+do wr
+--DEPOIS DISSO TEM QUE MUDAR O GATEWAY DOS PCS
+
+
+!SW
+
+en 
+conf t
+show mac-address-table

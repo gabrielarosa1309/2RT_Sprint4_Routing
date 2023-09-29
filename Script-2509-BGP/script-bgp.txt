@@ -1,0 +1,67 @@
+SCRIPT 25/09 - BGP
+
+!RT BAHIA
+
+en
+conf t
+int g0/1
+no shutdown
+ip address 10.0.0.1 255.255.255.0
+do wr
+int g0/0
+no shutdown
+ip address 200.200.200.1 255.255.255.252
+description BGP-MINAS-GERAIS
+en
+conf t
+router bgp 65001
+neighbor 200.200.200.2 remote-as 65000
+network 10.0.0.0 mask 255.255.255.0
+network 200.200.200.0 mask 255.255.255.252
+do wr
+
+
+!RT MINAS GERAIS
+
+en
+conf t
+int g0/0
+no shutdown
+ip address 200.200.200.2 255.255.255.252
+description BGP-BAHIA
+int g0/2
+no shutdown
+ip address 200.200.200.5 255.255.255.252
+description BGP-SA0-PAULO
+do wr
+en
+conf t
+router bgp 65000
+neighbor 200.200.200.1 remote-as 65001
+neighbor 200.200.200.6 remote-as 65002
+network 200.200.200.0 mask 255.255.255.252
+network 200.200.200.4 mask 255.255.255.252
+do wr
+
+
+!RT SÃO PAULO
+
+en
+conf t
+int g0/1
+no shutdown
+ip address 172.16.0.1 255.255.255.0
+do wr
+en 
+conf t
+int g0/2
+no shutdown
+ip address 200.200.200.6 255.255.255.252
+description BGP-SAO-PAULO
+en
+conf t
+router bgp 65002
+neighbor 200.200.200.5 remote-as 65000
+network 172.16.0.0 mask 255.255.255.0
+network 200.200.200.4 mask 255.255.255.252
+do wr

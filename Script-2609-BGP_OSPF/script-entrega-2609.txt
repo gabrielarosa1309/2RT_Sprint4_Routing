@@ -1,0 +1,66 @@
+SCRIPT 26/09 - ENTREGA
+Gabriela Ramos, 2RT
+
+!RT1
+en
+conf t
+router ospf 10
+router-id 3.3.3.3
+network 192.168.10.0 255.255.255.0 area 1
+network 200.200.200.0 255.255.255.252 area 1
+passive-interface g0/1
+do wr
+
+
+
+!RT4
+en
+conf t
+router ospf 10
+router-id 2.2.2.2
+network 200.200.200.0 255.255.255.252 area 1
+network 200.200.200.4 255.255.255.252 area 0
+do wr
+
+
+!RT3
+en
+conf t
+router ospf 10
+router-id 1.1.1.1
+network 200.200.200.4 255.255.255.252 area 0
+do wr
+router bgp 65000
+neighbor 200.200.200.10 remote-as 65001
+network 200.200.200.8 mask 255.255.255.252
+do wr
+exit
+router ospf 10
+redistribute bgp 65000 subnets
+exit 
+router bgp 65000
+redistribute ospf 10
+do wr
+
+
+!RT5
+en
+conf t
+router bgp 65001
+neighbor 200.200.200.9 remote-as 65000
+network 200.200.200.8 mask 255.255.255.252
+do wr
+router eigrp 1
+network 200.200.200.12 255.255.255.252
+redistribute bgp 65001
+DO WR
+
+
+!RT6
+en 
+conf t
+router eigrp 1
+network 200.200.200.12 255.255.255.252
+network 192.168.20.0 255.255.255.0
+passive-interface g0/1
+do wr

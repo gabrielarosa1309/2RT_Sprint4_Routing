@@ -1,0 +1,45 @@
+SCRIPT 26/09 - BGP + OSPF
+
+!RTRJ
+
+en
+conf t
+router bgp 65000
+neighbor 203.0.113.2 remote-as 65001
+network 10.0.0.0 mask 255.255.255.0
+network 203.0.113.0 mask 255.255.255.252
+do wr
+
+
+!RT2
+
+en
+conf t
+router bgp 65001
+neighbor 203.0.113.1 remote-as 65000
+network 203.0.113.0 mask 255.255.255.252
+do wr
+router ospf 10
+router-id 1.1.1.1
+network 203.0.113.4 255.255.255.252 area 0
+do wr
+en
+conf t
+router bgp 65001
+redistribute ospf 10
+exit
+router ospf 10
+redistribute bgp 65001 subnets 
+do wr
+
+
+!RTSP
+
+en
+conf t
+router ospf 10
+router-id 2.2.2.2
+network 203.0.113.4 255.255.255.252 area 0
+network 172.16.0.0 255.255.255.0 area 0
+passive-interface g0/0
+do wr

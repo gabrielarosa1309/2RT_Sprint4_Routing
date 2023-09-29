@@ -1,0 +1,55 @@
+SCRIPT ENTREGÁVEL BGP - 25/09
+Gabriela Ramos, 2RT
+
+!RT3
+en 
+conf t
+int g0/2
+no shutdown
+ip address 200.200.200.21 255.255.255.252
+int g0/0
+no shutdown
+ip address 200.200.200.17 255.255.255.252
+do wr
+router bgp 65005
+neighbor 200.200.200.22 remote-as 65001
+neighbor 200.200.200.18 remote-as 65004
+network 200.200.200.16 mask 255.255.255.252
+network 200.200.200.20 mask 255.255.255.252
+do wr
+
+
+!RT4
+en
+conf t
+int g0/0
+no shutdown
+ip address 200.200.200.18 255.255.255.252
+int g0/1
+no shutdown
+ip address 200.200.200.13 255.255.255.252
+do wr
+router bgp 65004
+neighbor 200.200.200.17 remote-as 65005
+neighbor 200.200.200.14 remote-as 65003
+network 200.200.200.16 mask 255.255.255.252
+network 200.200.200.12 mask 255.255.255.252
+do wr
+
+
+!RT5
+en
+conf t
+int g0/1
+no shutdown
+ip address 200.200.200.14 255.255.255.252
+int g0/0
+no shutdown
+ip address 200.200.200.10 255.255.255.252
+do wr
+router bgp 65003
+neighbor 200.200.200.13 remote-as 65004
+neighbor 200.200.200.19 remote-as 65002
+network 200.200.200.12 mask 255.255.255.252
+network 200.200.200.8 mask 255.255.255.252
+do wr

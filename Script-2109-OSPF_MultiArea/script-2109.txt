@@ -1,0 +1,75 @@
+SCRIPT 21/09 - OSPF Multi Area
+
+!RT3
+
+en
+conf t
+int g0/1
+no shutdown
+ip address 192.168.20.1 255.255.255.0
+int g0/0
+no shutdown 
+ip address 10.0.0.10 255.255.255.252
+do wr
+router ospf 10
+router-id 3.3.3.3
+network 10.0.0.8 0.0.0.3 area 2
+network 192.168.20.0 0.0.0.255 area 2 
+passive-interface g0/1
+do wr
+
+
+!RT2
+
+en
+conf t
+int g0/0
+no shutdown
+ip address 10.0.0.9 255.255.255.252
+int g0/2
+no shutdown
+ip address 10.0.0.6 255.255.255.252
+do wr
+router ospf 10
+router-id 4.4.4.4
+network 10.0.0.4 0.0.0.3 area 0 
+network 10.0.0.8 0.0.0.3 area 2
+do wr
+
+
+!RT1
+
+en
+conf t
+int g0/2
+no shutdown
+ip address 10.0.0.5 255.255.255.252
+int g0/0
+no shutdown
+ip address 10.0.0.2 255.255.255.252
+do wr
+router ospf 10
+network 10.0.0.0 0.0.0.3 area 1 
+network 10.0.0.4 0.0.0.3 area 0
+router-id 2.2.2.2
+do wr
+
+
+!RT0
+
+en
+conf t
+int g0/0
+no shutdown
+ip address 10.0.0.1 255.255.255.252
+int g0/1
+no shutdown
+ip address 192.168.10.1 255.255.255.0
+do wr
+router ospf 10
+network 192.168.10.0 0.0.0.255 area 1 
+network 10.0.0.0 0.0.0.3 area 1
+router-id 1.1.1.1
+passive-interface g0/1
+do wr
+
