@@ -1,0 +1,57 @@
+!SW0
+en
+conf t
+vlan 10
+name LINO
+vlan 20
+name alpha
+int f0/1
+switchport mode access
+switchport access vlan 10
+switchport mode access
+switchport access vlan 20
+interface g0/1
+switchport mode trunk
+switchport trunk allowed vlan all
+do wr
+
+!RT0
+en
+conf t
+int g0/1
+no shutdown
+int g0/1.10
+encapsulation dot1q 10
+ip address 192.168.10.1 255.255.255.0
+int g0/1.20
+encapsulation dot1q 20
+ip address 192.168.20.1 255.255.255.0
+int g0/0
+no shutdown
+ip address 200.200.200.1 255.255.255.252
+do wr
+int g0/0
+ip nat outside
+int g0/1
+ip nat inside
+exit
+ip nat inside source static 192.168.10.10 200.200.200.1
+int g0/1.10
+ip nat inside 
+int g0/1.20
+ip nat inside
+show ip nat translations
+ip route 0.0.0.0 0.0.0.0 200.200.200.2
+no ip nat inside source static 192.168.10.10 200.200.200.1
+access-list 10 permit 192.168.10.10
+ip nat inside source list 10 interface g0/0 overload
+access-list 10 permit 192.168.20.10
+
+!RT1
+en
+conf t
+int g0/0
+no shutdown
+ip address 200.200.200.2 255.255.255.252
+ip route 0.0.0.0 0.0.0.0 200.200.200.1
+debug ip icmp

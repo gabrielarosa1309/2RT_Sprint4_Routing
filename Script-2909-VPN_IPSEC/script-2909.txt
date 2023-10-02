@@ -47,10 +47,10 @@ authentication pre-share
 group 2
 exit
 crypto isakmp key Senai@134 address 200.200.200.1
-crypto ipsec transform-set ALPHA esp-3des esp-md5-hmac
+crypto ipsec transform-set LINO esp-3des esp-md5-hmac
 crypto map rj-sp 10 ipsec-isakmp 
 set peer 200.200.200.1
-set transform-set ALPHA 
+set transform-set LINO 
 match address VPN
 exit
 ip access-list extended VPN
